@@ -1,5 +1,7 @@
 const User = require("./../Models/UserModel");
 const jwt = require("jsonwebtoken");
+const catchAsync = require("./../utlis/catchAsync");
+const AppError = require("./../utlis/appError");
 const apiFeature = require("./../utils/APIFeatures");
 const apiFeatures = require("./../utils/APIFeatures");
 const signToken = (id) => {
@@ -14,7 +16,7 @@ const createSendToken = (user, statusCode = 200, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true, 
+    httpOnly: true,
   };
   res.cookie("jwt", token, cookieOptions);
   res.status(statusCode).json({
