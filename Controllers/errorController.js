@@ -1,5 +1,5 @@
-const AppError = require("./../utlis/appError");
-const catchAsync = require("./../utlis/catchAsync");
+const AppError = require("./../utils/appError");
+const catchAsync = require("./../utils/catchAsync");
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}.`;
   return new AppError(message, 400);
@@ -58,7 +58,7 @@ const sendErrorProd = (err, res) => {
 
 module.exports = (err, req, res, next) => {
   // console.log(err.stack);
-
+  //console.log("hello from error handler", err);
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
@@ -73,7 +73,7 @@ module.exports = (err, req, res, next) => {
     if (error.name === "JsonWebTokenError") error = handleJWTError();
     if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
     else error.message = err.message;
-    console.log("hello", error);
+
     sendErrorProd(error, res);
   }
 };

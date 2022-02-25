@@ -1,8 +1,8 @@
 const multer = require("multer");
 const sharp = require("sharp");
-const HttpError = require("../Models/http-error");
-const catchAsync = require("./../utlis/catchAsync");
-const AppError = require("./../utlis/appError");
+
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
 const { v1: uuid } = require("uuid");
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
@@ -16,8 +16,8 @@ const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
-const ResizePhoto = async (req, res, next) => {
-  if (!req.file) next(new HttpError("File not found!!", 404));
+const ResizePhoto = catchAsync(async (req, res, next) => {
+  if (!req.file) next(new AppError("File not found!!", 404));
   req.file.filename = `editorial-${uuid()}-${Date.now()}.jpeg`;
   try {
     await sharp(req.file.buffer)
@@ -26,11 +26,11 @@ const ResizePhoto = async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/${req.file.filename}`);
   } catch (err) {
-    next(new HttpError("Error occurred while resizing image", 500));
+    next(new AppError("Error occurred while resizing image", 500));
   }
   next();
-};
-const GetImageURL = async (req, res, next) => {
+});
+const GetImageURL = catchAsync(async (req, res, next) => {
   if (req.file.filename) {
     res.status(201).json({
       status: "success",
@@ -40,9 +40,9 @@ const GetImageURL = async (req, res, next) => {
       },
     });
   } else {
-    next(new HttpError("File not found!!", 404));
+    next(new AppError("File not found!!", 404));
   }
-};
+});
 
 exports.uploadPhoto = upload.single("photo");
 exports.getImageURL = GetImageURL;

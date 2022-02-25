@@ -1,7 +1,7 @@
 const User = require("./../Models/UserModel");
 const jwt = require("jsonwebtoken");
-const catchAsync = require("./../utlis/catchAsync");
-const AppError = require("./../utlis/appError");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
 const apiFeature = require("./../utils/APIFeatures");
 const apiFeatures = require("./../utils/APIFeatures");
 const signToken = (id) => {
@@ -37,23 +37,22 @@ const filterObj = (updateObj, filter) => {
 
   return updateObj;
 };
-exports.login = async (req, res, next) => {
+exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ rollNum: req.body.rollNum });
   createSendToken(user, 200, res);
-};
-exports.signUp = async (req, res, next) => {
+});
+
+exports.signUp = catchAsync(async (req, res, next) => {
   const user = await User.findById(req._id);
   if (user.role !== "owner")
-    return res.status(400).json({
-      message: "You are not authorized to create account, contact the owner",
-      status: "fail",
-    });
+    return next(
+      new AppError(
+        "You are not authorized to create account, contact the owner",
+        400
+      )
+    );
   const checknewUser = await User.findOne({ rollNum: req.body.rollNum });
-  if (checknewUser)
-    return res.status(400).json({
-      message: "User already exists",
-      status: "fail",
-    });
+  if (checknewUser) return next(new AppError("User already exists", 400));
   const UserObj = {
     name: req.body.name,
     email: req.body.email,
@@ -66,9 +65,9 @@ exports.signUp = async (req, res, next) => {
     status: "success",
     message: "User Created",
   });
-};
+});
 
-exports.viewMembers = async (req, res, next) => {
+exports.viewMembers = catchAsync(async (req, res, next) => {
   const queryString = req.query;
   const features = new apiFeatures(User.find({}), queryString).filter();
   const finalQuery = features.query.select(
@@ -76,23 +75,19 @@ exports.viewMembers = async (req, res, next) => {
   );
   const result = await finalQuery;
   return res.status(200).json({
-    status: "fail",
+    status: "success",
     message: "List of all the users",
     data: {
       data: result,
     },
   });
-};
-exports.viewProfile = async (req, res, next) => {
+});
+exports.viewProfile = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.userId).select(
     "rollNum name  designation  profilePhoto role  workEditorial  workMediaReport workSiteReport email"
   );
-  if (!user) {
-    res.status(400).json({
-      status: "fail",
-      message: "user does not exist",
-    });
-  }
+  if (!user) return next(new AppError("user does not exist", 400));
+
   res.status(201).json({
     status: "success",
     message: "user Detail",
@@ -100,8 +95,8 @@ exports.viewProfile = async (req, res, next) => {
       data: user,
     },
   });
-};
-exports.updateProfile = async (req, res, next) => {
+});
+exports.updateProfile = catchAsync(async (req, res, next) => {
   const userId = req.params.userId;
   const currentUser = await User.findById(req._id);
   const userProfile = await User.findById(userId);
@@ -115,20 +110,25 @@ exports.updateProfile = async (req, res, next) => {
   }
   if (currentUser.role.startsWith("stage")) {
     const CurrentUserstage = currentUser.role.slice(-1);
+    if (userProfile.role == "owner")
+      return next(
+        new AppError("You are not authorized to perform this task", 401)
+      );
     const Userstage = userProfile.role.slice(-1);
+
     if (Number(CurrentUserstage) <= Number(Userstage)) {
-      if (req.body.role) {
-        return res.status(401).json({
-          message: "You are not authorized to perform this task",
-          status: "fail",
-        });
-      }
+      if (req.body.role)
+        return next(
+          new AppError("You are not authorized to perform this task", 401)
+        );
     }
     if (Number(req.body.role) > Number(CurrentUserstage))
-      return res.status(401).json({
-        message: "You cannot upgrade a member to the requested position",
-        status: "fail",
-      });
+      return next(
+        new AppError(
+          "You cannot upgrade a member to the requested position",
+          401
+        )
+      );
     const updateObj = { ...req.body };
     const filteredObj = filterObj(updateObj, ["role"]);
     const userProfile1 = User.findById(userId);
@@ -136,7 +136,6 @@ exports.updateProfile = async (req, res, next) => {
       runValidators: true,
     });
   }
-
   if (req._id == userProfile._id) {
     const updateObj = req.body;
     const filteredObj = filterObj(updateObj, [
@@ -158,4 +157,4 @@ exports.updateProfile = async (req, res, next) => {
       data: updatedUser,
     },
   });
-};
+});
