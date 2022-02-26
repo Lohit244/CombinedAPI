@@ -2,30 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const designation = require("./../devData/designation");
+const rollAttribute = require("./../devData/rollAttribute");
 const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, "Kindly, provide the name"],
-    validate: {
-      validator: function (el) {
-        if (!validator.isAlpha(el, "en-US", { ignore: " " })) {
-          return false;
-        }
-        return true;
-      },
-      message: "Name should not contain special keys or digits",
-    },
   },
   email: {
     type: String,
     required: [true, "Kindly, provide the mailId"],
-    validate: {
-      validator: function (el) {
-        if (!validator.isEmail(el)) return false;
-        return true;
-      },
-      message: "Invalid mail Id",
-    },
   },
   rollNum: {
     type: String,
@@ -38,19 +24,7 @@ const userSchema = mongoose.Schema({
         if (array.length < 2) return false;
         const attribute = el.split("/");
         const attribute1 = attribute[0].toUpperCase();
-        const allattribute = [
-          "BTECH",
-          "IMH",
-          "IMS",
-          "BARC",
-          "IHM",
-          "BARC",
-          "BPH",
-          "BHMCT",
-          "IED",
-          "MCA",
-          "MTECH",
-        ];
+        const allattribute = [...rollAttribute];
         if (!allattribute.includes(attribute1)) return false;
       },
       message: "Invalid roll number",
@@ -77,30 +51,7 @@ const userSchema = mongoose.Schema({
   designation: {
     type: String,
     enum: {
-      values: [
-        "Naps-Member",
-        "President",
-        "Vice President",
-        "Editors-In-Chief",
-        "Media Head",
-        "Epistle Head",
-        "Events' Head",
-        "Interviews' Head",
-        "Technical Head",
-        "Senior Executive Member",
-        "General Secretary",
-        "Joint-Secretary",
-        "Treasure",
-        "Joint Treasurer",
-        "Deputy Editor",
-        "Media Coordinator",
-        "Epistle Coordinator",
-        "Interviews' Coordinator",
-        "Events' Coordinator",
-        "Design Head",
-        "Technical Coordinator",
-        "Executive Member",
-      ],
+      values: [...designation],
       message: "Designation did not match any of the following list",
     },
     default: "Naps-Member",
@@ -157,6 +108,8 @@ userSchema.pre("save", async function (next) {
   const attribute1 = attribute[0].toUpperCase();
   let regex = `${attribute1}`;
   regex = new RegExp(regex, "i");
+  this.rollNum = this.rollNum.replace(regex, attribute1);
+  console.log(this.rollNum);
   next();
 });
 userSchema.pre(/^update/, async function (next) {
@@ -165,6 +118,7 @@ userSchema.pre(/^update/, async function (next) {
   const attribute1 = attribute[0].toUpperCase();
   let regex = `${attribute1}`;
   regex = new RegExp(regex, "i");
+  this.rollNum = this.rollNum.replace(regex, attribute1);
   next();
 });
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {

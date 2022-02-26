@@ -1,20 +1,25 @@
 const express = require("express");
 const userRouter = require("./Routes/UserRoute");
-const imageRoute = require("./Routes/imageRoute"); 
-const blogRoute = require("./Routes/blogRoute")
-const tagsRoute = require("./Routes/tagsRoute")
-const mongoSanitize = require("express-mongo-sanitize");
+const globalErrorHandler = require("./Controllers/errorController");
+const AppError = require("./utils/appError");
+const imageRoute = require("./Routes/imageRoute");
+const blogRoute = require("./Routes/blogRoute");
+const tagsRoute = require("./Routes/tagsRoute");
 const xss = require("xss-clean");
 const helmet = require("helmet");
 const authorRoute = require("./Routes/authorRoute");
 const app = express();
 app.use(helmet());
-app.use(mongoSanitize());
 app.use(xss());
 app.use(express.json());
+app.use(express.static("public"));
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/image-upload",imageRoute);
-app.use("/blog",blogRoute);
-app.use("/author",authorRoute);
-app.use("/tags",tagsRoute)
+app.use("/api/v1/image-upload", imageRoute);
+app.use("/api/v1//blog", blogRoute);
+app.use("/api/v1//author", authorRoute);
+app.use("/api/v1//tags", tagsRoute);
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+app.use(globalErrorHandler);
 module.exports = app;
