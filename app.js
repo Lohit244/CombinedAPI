@@ -15,9 +15,9 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/image-upload", imageRoute);
-app.use("/api/v1//blog", blogRoute);
-app.use("/api/v1//author", authorRoute);
-app.use("/api/v1//tags", tagsRoute);
+app.use("/api/v1/blog", blogRoute);
+app.use("/api/v1/author", authorRoute);
+app.use("/api/v1/tags", tagsRoute);
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });

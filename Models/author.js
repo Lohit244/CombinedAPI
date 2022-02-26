@@ -6,6 +6,7 @@ const mongoose = require("mongoose")
  * @param photo - The photo url of the author.
  * @param desc - The description of the author.
  * @param tags - The tags of the author's posts.
+ * @param createdAt - The timestamp of the profile's creation.
  * @returns None
  */
 const authorSchema = new mongoose.Schema({
@@ -26,6 +27,10 @@ const authorSchema = new mongoose.Schema({
     type: Array,
     required: false,
     default: []
+  },
+  createdAt: {
+    type: Date,
+    required: true
   }
 })
 
