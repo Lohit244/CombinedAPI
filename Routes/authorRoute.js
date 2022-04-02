@@ -67,6 +67,7 @@ router.post("/",async(req,res)=>{
     name: req.body.name,
     photo: req.body.photo,
     desc: req.body.desc,
+    createdAt: Date.now()
   })
   try{
     const newAuthor = await Author.save();
