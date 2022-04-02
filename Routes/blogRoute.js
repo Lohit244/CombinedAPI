@@ -144,10 +144,10 @@ router.patch("/id/:id",getBlog,async(req,res)=>{
     res.Blog.content = req.body.content;
   }
   if(req.body.category != null){
-    res.Blog.category = req.Blog.catergory;
+    res.Blog.category = req.body.category;
   }
   if(req.body.summary != null){
-    res.Blog.category = req.Blog.summary;
+    res.Blog.summary = req.body.summary;
   }
   try{
     const newBlog = await res.Blog.save();
@@ -183,11 +183,13 @@ router.get("/new",async(req,res)=>{
     for(const curBlog of Blogs){
       const authorObj = await author.findById(mongoose.Types.ObjectId(curBlog.author));
       ans.push({
+        _id: curBlog._id,
         title: curBlog.title,
         author: curBlog.author,
         authorName: authorObj.name,
         createdAt: curBlog.createdAt,
         thumbnail: curBlog.thumbnail,
+        summary: curBlog.summary
       });
     };
     res.json(ans);
