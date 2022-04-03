@@ -8,9 +8,11 @@ const tagsRoute = require("./Routes/tagsRoute");
 const xss = require("xss-clean");
 const helmet = require("helmet");
 const authorRoute = require("./Routes/authorRoute");
+const cors = require("cors");
 const app = express();
 app.use(helmet());
 app.use(xss());
+app.use(cors())
 app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/v1/users", userRouter);
