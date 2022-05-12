@@ -187,6 +187,8 @@ router.get("/new",async(req,res)=>{
         title: curBlog.title,
         author: curBlog.author,
         authorName: authorObj.name,
+        tags: curBlog.tags,
+        category: curBlog.category,
         createdAt: curBlog.createdAt,
         thumbnail: curBlog.thumbnail,
         summary: curBlog.summary
