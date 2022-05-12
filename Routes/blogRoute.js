@@ -67,7 +67,7 @@ router.get("/",async(req,res)=>{
 router.get("/id/:id",getBlog, async(req,res)=>{
   try{
   const authorObj = await author.findById(mongoose.Types.ObjectId(res.Blog.author));
-  res.json({...res.Blog, authorName: authorObj.name});
+  res.json({...res.Blog._doc, authorName: authorObj.name});
   }catch(err){
     res.status(500).json({
       message: err.message
