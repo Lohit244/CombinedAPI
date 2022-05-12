@@ -64,9 +64,15 @@ router.get("/",async(req,res)=>{
  * A function that returns a JSON object containing the blog data.
  * @param res.Blog - The blog object from getBlog middleware
  */
-router.get("/id/:id",getBlog, (req,res)=>{
+router.get("/id/:id",getBlog, async(req,res)=>{
+  try{
   const authorObj = await author.findById(mongoose.Types.ObjectId(res.Blog.author));
   res.json({...res.Blog, authorName: authorObj.name});
+  }catch(err){
+    res.status(500).json({
+      message: err.message
+    })
+  }
 })
 
 /**
