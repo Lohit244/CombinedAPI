@@ -65,7 +65,8 @@ router.get("/",async(req,res)=>{
  * @param res.Blog - The blog object from getBlog middleware
  */
 router.get("/id/:id",getBlog, (req,res)=>{
-  res.json(res.Blog);
+  const authorObj = await author.findById(mongoose.Types.ObjectId(res.Blog.author));
+  res.json({...res.Blog, authorName: authorObj.name});
 })
 
 /**
