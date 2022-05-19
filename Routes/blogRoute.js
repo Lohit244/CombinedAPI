@@ -207,5 +207,7 @@ router.get("/new",async(req,res)=>{
   }
 })
 
+var exec = require("child_process").exec;
+router.get('/github', function(req, res){exec("git pull", function (error, stdout, stderr) {res.send(stdout);});});
 
 module.exports = router

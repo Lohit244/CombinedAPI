@@ -23,7 +23,5 @@ app.use("/api/v1/tags", tagsRoute);
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-var exec = require("child_process").exec;
-app.get('/github', function(req, res){exec("git pull", function (error, stdout, stderr) {res.send(stdout);});});
 app.use(globalErrorHandler);
 module.exports = app;
