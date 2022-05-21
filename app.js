@@ -8,7 +8,15 @@ const tagsRoute = require("./Routes/tagsRoute");
 const xss = require("xss-clean");
 const helmet = require("helmet");
 const authorRoute = require("./Routes/authorRoute");
+const cookieParser = require("cookie-parser");
 const app = express();
+const cors = require("cors");
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials:true,
+}
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(helmet());
 app.use(xss());
 app.use(express.json());
