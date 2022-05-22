@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require("./../Controllers/userController");
 const authController = require("./../Controllers/authController");
 const { check } = require("express-validator");
-router.route("/signUp").post(userController.checkJWT, authController.signUp);
+router.route("/signUp").post(userController.checkJWT,authController.signUp);
 router.post("/login", userController.protect, authController.login);
 router.patch(
   "/update",

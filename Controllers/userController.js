@@ -34,7 +34,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.checkJWT = async (req, res, next) => {
   let token;
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -42,7 +41,8 @@ exports.checkJWT = async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
   if (req.cookies) {
-    if (req.cookies.jwt) token = req.cookies.jwt;
+    if(!req.cookies.user) return next(new AppError("You do not have permission to add new users.", 400));
+    if(req.cookies.user) token = req.cookies.user;
   }
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
