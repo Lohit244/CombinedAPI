@@ -19,7 +19,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(helmet());
 app.use(xss());
-app.use(cors())
 app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/v1/users", userRouter);
