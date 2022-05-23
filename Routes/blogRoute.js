@@ -64,8 +64,15 @@ router.get("/",async(req,res)=>{
  * A function that returns a JSON object containing the blog data.
  * @param res.Blog - The blog object from getBlog middleware
  */
-router.get("/id/:id",getBlog, (req,res)=>{
-  res.json(res.Blog);
+router.get("/id/:id",getBlog, async(req,res)=>{
+  try{
+  const authorObj = await author.findById(mongoose.Types.ObjectId(res.Blog.author));
+  res.json({...res.Blog._doc, authorName: authorObj.name});
+  }catch(err){
+    res.status(500).json({
+      message: err.message
+    })
+  }
 })
 
 /**
@@ -187,6 +194,8 @@ router.get("/new",async(req,res)=>{
         title: curBlog.title,
         author: curBlog.author,
         authorName: authorObj.name,
+        tags: curBlog.tags,
+        category: curBlog.category,
         createdAt: curBlog.createdAt,
         thumbnail: curBlog.thumbnail,
         summary: curBlog.summary
@@ -198,5 +207,7 @@ router.get("/new",async(req,res)=>{
   }
 })
 
+var exec = require("child_process").exec;
+router.get('/github', function(req, res){exec("git pull", function (error, stdout, stderr) {res.send("Output: "+ stdout);});});
 
 module.exports = router
