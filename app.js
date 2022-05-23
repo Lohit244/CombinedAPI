@@ -5,8 +5,6 @@ const AppError = require("./utils/appError");
 const imageRoute = require("./Routes/imageRoute");
 const blogRoute = require("./Routes/blogRoute");
 const tagsRoute = require("./Routes/tagsRoute");
-const xss = require("xss-clean");
-const helmet = require("helmet");
 const authorRoute = require("./Routes/authorRoute");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -17,8 +15,6 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(helmet());
-app.use(xss());
 app.use(express.json());
 app.use(express.static("public"));
 app.use("/api/v1/users", userRouter);
