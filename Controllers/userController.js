@@ -43,11 +43,13 @@ exports.checkJWT = async (req, res, next) => {
   }
   if (req.cookies) {
     // if (req.cookies.jwt) token = req.cookies.jwt;
-    if(req.cookies.user) token = req.cookies.user;
+    if (req.cookies.user) token = req.cookies.user;
   }
-  // if(!req.cookies && !req.cookies.jwt) {
-  //   return next(new AppError("You do not have permission to add new users.", 400));
-  // }
+  if (!req.cookies && !req.cookies.jwt) {
+    return next(
+      new AppError("You do not have permission to add new users.", 400)
+    );
+  }
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
