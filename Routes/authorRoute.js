@@ -43,21 +43,16 @@ router.get("/",async(req,res)=>{
 
 /**
  * Route - baseURL/author/id/:id/
- * A simple function that returns the author of the project.
+ * A simple function that returns the author and his blogs array.
  * @param res.Author - the author Object from the getAuthor middleware
  */
-router.get("/id/:id",getAuthor,(req,res)=>{
-  res.json(res.Author);
+
+router.get("/id/:id",getAuthor,async(req,res)=>{
+  Blogs = await blog.find({author: req.params.id});
+  res.json({...res.Author._doc, Blogs});
 })
 
-/**
- * Returns the blogs by author with given ID.
- * Route - baseURL/author/id/:id/blogs
- */
-router.get("/id/:id/blogs",async(req,res)=>{
-  Blogs = await blog.find({author: req.params.id});
-  res.json(Blogs);
-})
+
 
 /**
  * Takes in a request and response object and creates a new author.
