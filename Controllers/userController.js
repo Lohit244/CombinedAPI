@@ -34,7 +34,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.checkJWT = async (req, res, next) => {
   let token;
-  console.log(req.cookies.user);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
