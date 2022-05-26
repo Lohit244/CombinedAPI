@@ -53,12 +53,14 @@ exports.signUp = catchAsync(async (req, res, next) => {
     );
   const checknewUser = await User.findOne({ rollNum: req.body.rollNum });
   if (checknewUser) return next(new AppError("User already exists", 400));
+  const authorId = ObjectId(req.body.authorId);
   const UserObj = {
     name: req.body.name,
     email: req.body.email,
     rollNum: req.body.rollNum,
     password: req.body.password,
     cnfrmPassword: req.body.cnfrmPassword,
+    authorId: authorId,
   };
   const newUser = await User.create(UserObj);
   res.status(201).json({
