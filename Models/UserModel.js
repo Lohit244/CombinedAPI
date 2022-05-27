@@ -48,6 +48,11 @@ const userSchema = mongoose.Schema({
       ref: "naps_blog",
     },
   ],
+  authorId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "naps_author",
+    required: [true, "Author ID must be provided"],
+  },
   designation: {
     type: String,
     enum: {
