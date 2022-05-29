@@ -25,11 +25,16 @@ const authorSchema = new mongoose.Schema({
   },
   tags: {
     type: Array,
-    required: false,
+    required: true,
     default: []
   },
   createdAt: {
     type: Date,
+    required: true
+  },
+  rollNum: {
+    type: String,
+    unique: true,
     required: true
   }
 })

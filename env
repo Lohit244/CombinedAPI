@@ -1,5 +1,5 @@
 MONGODB_USERNAME = IshanPandey703
 MONGODB_PASSWORD = 2DINfXCPKWIZqE0o
 JWT_SECRET = my-ultra-secure-and-ultra-long-secret
-JWT_EXPIRES_IN=90d
+JWT_EXPIRES_IN=7776000
 NODE_ENV=production

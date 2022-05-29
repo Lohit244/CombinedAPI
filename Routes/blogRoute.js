@@ -45,14 +45,21 @@ async function getAuthor(req,res,next){
 
   res.Author = Author;
   next();
-}
+  const blog = blogsFromDB[i]}
 /* 
 * Route - baseURL/blog/
 * Gets an array of all the blogs in the database
 */
 router.get("/",async(req,res)=>{
   try{
-    const blogs = await blog.find()
+    const blogsFromDB = await blog.find()
+    var blogs = [];
+    console.log("foo")
+    for(const curblog of blogsFromDB){
+      console.log(curblog)
+      const authorObj = await author.findById(mongoose.Types.ObjectId(curblog.author));
+      blogs.push({...curblog._doc,authorName: authorObj.name})
+    }
     res.json(blogs)
   }catch (err){
     res.status(500).json({ message: err.message })
