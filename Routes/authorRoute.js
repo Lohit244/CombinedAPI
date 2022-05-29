@@ -1,7 +1,10 @@
 const express = require("express");
+const User = require("../Models/UserModel");
 const router = express.Router()
 const authorschema = require("../Models/author")
 const blog = require("../Models/blog")
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 // Data -> Name, Photo, Description, Tags (Auto Generated)
 // TODO 
 
@@ -58,10 +61,29 @@ router.get("/id/:id",getAuthor,async(req,res)=>{
  * Takes in a request and response object and creates a new author.
  */
 router.post("/",async(req,res)=>{
+  let token;
+  if ( req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+    try{
+      const decoded = await (promisify)(jwt.verify)(token, process.env.JWT_SECRET);
+      const currentUser = await User.findById(decoded.id);
+      if(currentUser.role!="owner"){
+        res.status(401).json({message: "You are not authorized to perform this action"});
+      }
+    }catch(err){
+      res.status(400).json({message: err.message})
+      return;
+    }
+  }else{
+    res.status(401).json({message: "You're not Logged In"});
+    return;
+  }
+
   const Author = new authorschema({
     name: req.body.name,
     photo: req.body.photo,
     desc: req.body.desc,
+    rollNum: req.body.rollNum,
     createdAt: Date.now()
   })
   try{
