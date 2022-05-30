@@ -39,6 +39,10 @@ exports.checkJWT = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+  } else {
+    return next(
+      new AppError("You do not have permission to add new users.", 400)
+    );
   }
   if (req.cookies) {
     // if (req.cookies.jwt) token = req.cookies.jwt;
