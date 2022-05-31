@@ -114,7 +114,7 @@ router.patch("/id/:id",getAuthor,async(req,res)=>{
   }
 
   if(req.body.tags != null){
-    res.Author.tags = req.body.desc;
+    res.Author.tags = req.body.tags;
   }
 
   try{
