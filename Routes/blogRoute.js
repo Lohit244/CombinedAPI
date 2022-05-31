@@ -45,7 +45,7 @@ async function getAuthor(req,res,next){
 
   res.Author = Author;
   next();
-  const blog = blogsFromDB[i]}
+}
 /* 
 * Route - baseURL/blog/
 * Gets an array of all the blogs in the database
