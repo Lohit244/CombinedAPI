@@ -41,7 +41,7 @@ exports.checkJWT = async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   } else {
     return next(
-      new AppError("You do not have permission to add new users.", 400)
+      new AppError("You do not have permission to access this route", 400)
     );
   }
   if (req.cookies) {
@@ -50,7 +50,7 @@ exports.checkJWT = async (req, res, next) => {
   }
   if (!req.cookies && !req.cookies.jwt) {
     return next(
-      new AppError("You do not have permission to add new users.", 400)
+      new AppError("You do not have permission to access this route", 400)
     );
   }
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
