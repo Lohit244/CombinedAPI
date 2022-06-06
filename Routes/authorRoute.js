@@ -87,6 +87,11 @@ router.post("/",async(req,res)=>{
     createdAt: Date.now()
   })
   try{
+    const dupliCheck = await authorschema.find({rollNum: req.body.rollNum});
+    if(dupliCheck.length>0){
+      res.status(401).json({message: "User aleready exists with provided roll number"})
+      return;
+    }
     const newAuthor = await Author.save();
     res.status(201).send(newAuthor);
   } catch (err){
