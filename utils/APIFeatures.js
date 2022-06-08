@@ -12,5 +12,11 @@ class apiFeatures {
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
   }
+  paginate() {
+    const page = this.queryString.page * 1 || 1;
+    const skip = (page - 1) * 10;
+    this.query = this.query.skip(skip).limit(10);
+    return this;
+  }
 }
 module.exports = apiFeatures;
