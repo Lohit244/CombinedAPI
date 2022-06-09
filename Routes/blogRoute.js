@@ -54,9 +54,7 @@ router.get("/",async(req,res)=>{
   try{
     const blogsFromDB = await blog.find()
     var blogs = [];
-    console.log("foo")
     for(const curblog of blogsFromDB){
-      console.log(curblog)
       const authorObj = await author.findById(mongoose.Types.ObjectId(curblog.author));
       blogs.push({...curblog._doc,authorName: authorObj.name})
     }
@@ -177,7 +175,12 @@ router.patch("/id/:id",getBlog,async(req,res)=>{
  */
 router.get("/tag/:tag", async(req,res)=>{
   try{
-    const Blogs = await blog.find({tags: {$all: req.params.tag}});
+    const blogsFromDB = await blog.find({tags: {$all: req.params.tag}});
+    var Blogs = []
+    for(const curblog of blogsFromDB){
+      const authorObj = await author.findById(mongoose.Types.ObjectId(curblog.author));
+      blogs.push({...curblog._doc,authorName: authorObj.name})
+    }
     res.json(Blogs);
   }catch(err){
     res.status(500).json({message: err.message});
