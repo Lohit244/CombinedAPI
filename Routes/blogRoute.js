@@ -179,7 +179,7 @@ router.get("/tag/:tag", async(req,res)=>{
     var Blogs = []
     for(const curblog of blogsFromDB){
       const authorObj = await author.findById(mongoose.Types.ObjectId(curblog.author));
-      blogs.push({...curblog._doc,authorName: authorObj.name})
+      Blogs.push({...curblog._doc,authorName: authorObj.name})
     }
     res.json(Blogs);
   }catch(err){
