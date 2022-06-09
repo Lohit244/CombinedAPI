@@ -175,9 +175,9 @@ router.patch("/id/:id",getBlog,async(req,res)=>{
  * route - baseURL/blog/tag
  * Finds all blogs with the given tags.
  */
-router.get("/tag", async(req,res)=>{
+router.get("/tag/:tag", async(req,res)=>{
   try{
-    const Blogs = await blog.find({tags: {$all: req.body.tags}});
+    const Blogs = await blog.find({tags: {$all: req.params.tag}});
     res.json(Blogs);
   }catch(err){
     res.status(500).json({message: err.message});
