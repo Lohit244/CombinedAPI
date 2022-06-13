@@ -58,7 +58,7 @@ exports.checkJWT = async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     currentUser = await User.findById(decoded.id);
   }catch(err){
-    return next(new AppError("Invalid JWT",401))
+    return next(new AppError("You are not authorised",401))
   }
   if (!currentUser) return next(new AppError("Invalid User", 400));
 
