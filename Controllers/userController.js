@@ -53,9 +53,13 @@ exports.checkJWT = async (req, res, next) => {
       new AppError("You do not have permission to access this route", 400)
     );
   }
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
-  const currentUser = await User.findById(decoded.id);
+  var currentUser;
+  try{
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    currentUser = await User.findById(decoded.id);
+  }catch(err){
+    return next(new AppError("Invalid JWT",401))
+  }
   if (!currentUser) return next(new AppError("Invalid User", 400));
 
   if (currentUser.changedPasswordAfter(decoded.iat))
