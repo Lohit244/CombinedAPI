@@ -123,7 +123,7 @@ router.post("/", userController.checkJWT,getAuthor,async(req,res)=>{
  * Removes all blog posts from the database.
  * @param res.Blog - The blog object from getBlog middleware
  */
-router.delete("/id/:id",  getBlog, async(req,res)=>{ 
+router.delete("/id/:id", userController.checkJWT,  getBlog, async(req,res)=>{ 
   try{
     await res.Blog.remove();
     res.json({message: "Removed Succesfully"})
@@ -137,7 +137,7 @@ router.delete("/id/:id",  getBlog, async(req,res)=>{
  * Update a blog post with the given ID. 
  * @param res.Blog - The blog object from getBlog middleware
  */
-router.patch("/id/:id",getBlog,async(req,res)=>{
+router.patch("/id/:id", userController.checkJWT,getBlog,async(req,res)=>{
   if(req.body.title != null){
     res.Blog.title = req.body.title;
   }
