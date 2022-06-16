@@ -3,6 +3,7 @@ const userController = require("./../Controllers/userController");
 const express = require("express");
 const router = express.Router();
 router.route("/Notice").get(EpistleController.getAllNotice);
+router.route("/Notice/:filter").get(EpistleController.getFilteredNotice)
 router.use(userController.checkJWT, EpistleController.checkUser);
 router.route("/Notice/:noticeId").delete(EpistleController.DeleteEpistlePost);
 router
