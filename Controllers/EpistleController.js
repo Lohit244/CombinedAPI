@@ -150,3 +150,29 @@ exports.DeleteEpistlePost = catchAsync(async (req, res, next) => {
     message: "Notice successfully deleted",
   });
 });
+
+exports.getFilteredNotice = catchAsync(async (req, res, next) => {
+  const query = req.params.filter;
+  const filter = query.replace(/\-/g, " ");
+  const startDate = new Date(filter);
+  const month = startDate.getMonth();
+  const data = await Epistle.aggregate([
+    {
+      $match: {
+        DateAdded: {
+          $gte: new Date(filter),
+          $lte: new Date(startDate.setMonth(month + 1)),
+        },
+      },
+    },
+    // {
+    //   $match: {
+    //     DateAdded: { $lte: new Date(startDate.setMonth(month + 1)) },
+    //   },
+    // },
+  ]);
+  return res.status(200).json({
+    result: data.length,
+    data,
+  });
+});
