@@ -165,11 +165,6 @@ exports.getFilteredNotice = catchAsync(async (req, res, next) => {
         },
       },
     },
-    // {
-    //   $match: {
-    //     DateAdded: { $lte: new Date(startDate.setMonth(month + 1)) },
-    //   },
-    // },
   ]);
   return res.status(200).json({
     result: data.length,
