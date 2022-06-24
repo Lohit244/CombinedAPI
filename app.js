@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://naps-website.vercel.app",
   credentials: true,
 };
 app.use(cors(corsOptions));
