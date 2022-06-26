@@ -98,7 +98,7 @@ router.post("/", userController.checkJWT,getAuthor,async(req,res)=>{
     content: req.body.content,
     category: req.body.category,
     summary: req.body.summary,
-    createdAt: Date.now()
+    createdAt: req.body.createdAt?req.body.createdAt:Date.now()
   })
   try{
     const newBlog = await Blog.save()
